@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XSS漏洞</title>
+
+    <style>
+
+      .hide {
+        display: none;
+      }
+
+      .show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <form onsubmit="login(event)" id="login" class="show">
+        <div>
+          <label>
+            用户名：
+            <input type="text" >
+          </label>
+        </div>
+        <div>
+          <label>
+            密码:
+            <input type="password" >
+          </label>
+        </div>
+        <div>
+          <button type="submit" onclick="">登录</button>
+        </div>
+      </form>
+
+
+      <div>
+        <p class="name"></p>
+      </div>
+
+      <!-- <form id="regular" class="hide">
+        <div>
+          <label>
+            评论：
+            <input type="text" >
+          </label>
+        </div>
+        
+        <div>
+          <button type="submit" onclick="">登出</button>
+        </div>
+      </form> -->
+
+    </div>
+    <script>
+      
+
+      function getArticle() {
+        let query = {}
+        window.location.search.substr(1).split('&').forEach(item => {
+          const [key, value] = item.split('=')
+          query[key] = value
+        })
+
+        query.name = '<img src="http://localhost:/1121">';
+        document.querySelector('.name').innerHTML = query.name
+
+
+        // fetch('http://localhost:1111/article', { method: 'post', credentials: 'include' })
+      }
+
+      document.cookie && getArticle()
+
+      function login(e) {
+        e.preventDefault()
+        fetch('http://localhost:1111/login', { method: 'post', credentials: 'include' })
+
+        document.querySelector('#login').classList.add('hide');
+        document.querySelector('#regular').classList.add('show');
+      }
+
+
+
+
+
+
+    
+    </script>
+  </body>
+</html>
